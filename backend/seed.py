@@ -21,6 +21,10 @@ def seed():
         db.commit()
         print("✓ Default admin created: admin / changeme123")
     else:
+        existing.email = "admin@filehelper.local"
+        existing.password_hash = hash_password("changeme123")
+        existing.role = "admin"
+        db.commit()
         print("✓ Admin user already exists")
 
     db.close()
