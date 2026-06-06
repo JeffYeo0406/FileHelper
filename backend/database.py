@@ -37,7 +37,7 @@ def reset_sqlite_db_file():
 
     db_path = Path(url.database)
     if not db_path.is_absolute():
-        db_path = (Path(__file__).resolve().parent / db_path).resolve()
+        db_path = (Path.cwd() / db_path).resolve()
 
     engine.dispose()
     if db_path.exists():
