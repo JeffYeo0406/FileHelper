@@ -43,11 +43,8 @@ async def startup():
 
 
 # Serve frontend static files
-frontend_path = os.path.abspath(FRONTEND_DIR)
-if os.path.exists(frontend_path):
-    app.mount("/app", StaticFiles(directory=frontend_path, html=True), name="frontend")
-    app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
+backend_dir = os.path.dirname(os.path.abspath(__file__))
+frontend_dir = os.path.abspath(os.path.join(backend_dir, "..", "frontend"))
 
-@app.get("/")
-def root():
-    return {"app": "Simple File Helper", "version": "2.0.0", "docs": "/docs"}
+if os.path.exists(frontend_dir):
+    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
