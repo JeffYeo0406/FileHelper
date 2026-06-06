@@ -14,6 +14,8 @@ app = FastAPI(
     version="2.0.0"
 )
 
+app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
+
 # CORS — allow same-origin browser access
 app.add_middleware(
     CORSMiddleware,
@@ -46,7 +48,7 @@ async def startup():
 frontend_path = os.path.abspath(FRONTEND_DIR)
 if os.path.exists(frontend_path):
     app.mount("/app", StaticFiles(directory=frontend_path, html=True), name="frontend")
-
+    app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
 
 @app.get("/")
 def root():
