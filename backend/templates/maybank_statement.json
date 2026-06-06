@@ -1,0 +1,18 @@
+{
+  "name": "Maybank Statement",
+  "category": "bank_statement",
+  "icon": "building-bank",
+  "description": "Extract all transactions from a Maybank PDF bank statement.",
+  "gemini_prompt": "You are a financial document parser. Extract ALL transaction rows from this bank statement. Return ONLY a valid JSON array with no other text. Each item must have: date (DD/MM/YYYY string), description (string), debit (number or null), credit (number or null), balance (number). Do not truncate or omit any rows.",
+  "columns": [
+    { "key": "date", "label": "Date", "type": "string", "width": 14 },
+    { "key": "description", "label": "Description", "type": "string", "width": 42 },
+    { "key": "debit", "label": "Debit (RM)", "type": "number", "width": 14 },
+    { "key": "credit", "label": "Credit (RM)", "type": "number", "width": 14 },
+    { "key": "balance", "label": "Balance (RM)", "type": "number", "width": 16 }
+  ],
+  "summary_metrics": [
+    { "label": "Total Debits", "column": "debit", "agg": "sum" },
+    { "label": "Total Credits", "column": "credit", "agg": "sum" }
+  ]
+}

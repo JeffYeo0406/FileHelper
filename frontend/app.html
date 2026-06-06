@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple File Helper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,300&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Simple File <em>Helper</em></h2>
+                <div class="user-info">
+                    <span id="displayName">—</span>
+                    <span id="displayRole"></span>
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation Tabs -->
+            <nav class="sidebar-nav" aria-label="Main navigation">
+                <button class="nav-item active" id="navMain" onclick="showView('main')" aria-pressed="true">
+                    <span class="nav-icon">📄</span>
+                    <span class="nav-label">Templates</span>
+                </button>
+                <button class="nav-item" id="navSettings" onclick="showView('settings')" aria-pressed="false">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-label">Settings</span>
+                </button>
+            </nav>
+
+            <!-- Template list (visible only in main view) -->
+            <div class="template-list" id="templateList">
+                <div style="color:rgba(255,255,255,0.4);padding:1rem;font-size:0.85rem;">Loading templates...</div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-ghost" style="color:rgba(255,255,255,0.5);border-color:rgba(255,255,255,0.1);" id="logoutBtn">← Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <div id="mainView">
+                <section class="upload-section">
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-icon" id="uploadIcon">📂</div>
+                        <div class="upload-text" id="uploadText">Select a template from the sidebar first</div>
+                        <div class="upload-hint" id="uploadHint">Then upload your PDF, CSV, or Excel file</div>
+                        <div class="file-selected" id="fileSelected">
+                            <span id="fileName"></span>
+                        </div>
+                        <input type="file" id="fileInput" accept=".pdf,.csv,.xlsx" hidden>
+                        <button type="button" class="btn btn-primary" id="selectFileBtn">📁 Select File</button>
+                        <button type="button" class="btn btn-primary hidden" id="uploadBtn" onclick="handleUpload()" style="margin-top:0.75rem;">⚡ Process & Download</button>
+                    </div>
+                </section>
+
+                <div class="error-card" id="errorCard">
+                    <div class="error-title">Something went wrong</div>
+                    <div class="error-detail" id="errorMessage"></div>
+                    <button class="btn btn-primary btn-small" onclick="dismissError()">Try Again</button>
+                </div>
+
+                <section class="history-section">
+                    <h2>Recent Files</h2>
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Template</th>
+                                <th>Date</th>
+                                <th>Rows</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody"></tbody>
+                    </table>
+                    <div class="empty-state" id="emptyHistory">
+                        <div class="empty-icon">📭</div>
+                        <p>No files processed yet</p>
+                        <p class="empty-hint">Select a template and upload your first file to get started</p>
+                    </div>
+                </section>
+            </div>
+
+            <div id="settingsView" class="hidden">
+                <div class="settings-page">
+                    <h2 class="page-title">Settings</h2>
+
+                    <div class="settings-card">
+                        <div class="settings-card-header">
+                            <span class="settings-card-icon">🔤</span>
+                            <div>
+                                <h3>Text Size</h3>
+                                <p class="settings-desc">Make text larger if it's hard to read</p>
+                            </div>
+                        </div>
+                        <div class="font-size-options">
+                            <label>
+                                <input type="radio" name="fontSize" value="normal" checked onchange="applyFontSize('normal')">
+                                <span class="font-label">
+                                    <span class="font-preview" style="font-size:1rem;">A</span>
+                                    Normal
+                                </span>
+                            </label>
+                            <label>
+                                <input type="radio" name="fontSize" value="large" onchange="applyFontSize('large')">
+                                <span class="font-label">
+                                    <span class="font-preview" style="font-size:1.3rem;">A</span>
+                                    Large
+                                </span>
+                            </label>
+                            <label>
+                                <input type="radio" name="fontSize" value="xlarge" onchange="applyFontSize('xlarge')">
+                                <span class="font-label">
+                                    <span class="font-preview" style="font-size:1.6rem;">A</span>
+                                    Extra Large
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="settings-card-header">
+                            <span class="settings-card-icon">🔒</span>
+                            <div>
+                                <h3>Change Password</h3>
+                                <p class="settings-desc">Keep your account secure with a strong password</p>
+                            </div>
+                        </div>
+                        <form id="changePasswordForm">
+                            <div class="form-group">
+                                <label for="oldPassword">Current Password</label>
+                                <input type="password" id="oldPassword" required autocomplete="current-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword">New Password <span class="field-hint">(at least 6 characters)</span></label>
+                                <input type="password" id="newPassword" required minlength="6" autocomplete="new-password">
+                            </div>
+                            <div id="passwordMsg" class="error-msg"></div>
+                            <button type="submit" class="btn btn-primary btn-settings-submit">Update Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Full-screen Spinner -->
+    <div class="spinner-overlay" id="spinner">
+        <div class="spinner"></div>
+        <div class="spinner-text">Processing your file...</div>
+        <div class="spinner-sub">This usually takes 10–30 seconds</div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+import os
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
+from database import init_db
+from routers.templates import load_templates
+from routers import auth, templates, process, history
+from config import OUTPUT_DIR, FRONTEND_DIR
+
+app = FastAPI(
+    title="Simple File Helper",
+    description="Upload bank statements → Gemini AI extracts transactions → Download Excel",
+    version="2.0.0"
+)
+
+# CORS — allow same-origin browser access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Register API routers
+app.include_router(auth.router)
+app.include_router(templates.router)
+app.include_router(process.router)
+app.include_router(history.router)
+
+
+@app.on_event("startup")
+async def startup():
+    # Ensure output directory exists
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    # Initialize database tables
+    init_db()
+
+    # Load all template JSON files into memory
+    load_templates()
+
+
+# Serve frontend static files
+frontend_path = os.path.abspath(FRONTEND_DIR)
+if os.path.exists(frontend_path):
+    app.mount("/app", StaticFiles(directory=frontend_path, html=True), name="frontend")
+
+
+@app.get("/")
+def root():
+    return {"app": "Simple File Helper", "version": "2.0.0", "docs": "/docs"}

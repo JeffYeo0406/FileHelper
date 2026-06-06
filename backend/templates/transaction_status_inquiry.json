@@ -1,0 +1,20 @@
+{
+  "name": "Transaction Status Inquiry",
+  "category": "bank_statement",
+  "icon": "file-check",
+  "description": "Standardize bank statement data, cross-reference payer/beneficiary records, and compute total transaction values from CSV/Excel exports.",
+  "gemini_prompt": "You are an expert banking operations parser. Analyze the provided spreadsheet data matrix. Extract every single valid transaction record row. For each entry, normalize and extract these exact fields: value_date (the date string — strip timezone codes like 'MY', keep the date portion only e.g. '26 May 2026'), ref_no (the transaction reference string), payer_name (string), payer_account_no (string or integer), beneficiary_name (string), amount_myr (extract the clean floating point numeric value from the amount string, stripping currency prefixes like MYR), and status (string). Do not truncate or omit rows.",
+  "columns": [
+    { "key": "value_date", "label": "Value Date", "type": "string", "width": 13 },
+    { "key": "ref_no", "label": "Ref No", "type": "string", "width": 24 },
+    { "key": "payer_name", "label": "Payer", "type": "string", "width": 29 },
+    { "key": "payer_account_no", "label": "Payer A/C", "type": "string", "width": 16.2 },
+    { "key": "beneficiary_name", "label": "Beneficiary", "type": "string", "width": 28 },
+    { "key": "amount_myr", "label": "Amount (MYR)", "type": "number", "width": 13 },
+    { "key": "status", "label": "Status", "type": "string", "width": 12 }
+  ],
+  "summary_metrics": [
+    { "label": "Total Settled Volume (MYR)", "column": "amount_myr", "agg": "sum" },
+    { "label": "Total Operations Processed", "column": "ref_no", "agg": "count" }
+  ]
+}
