@@ -137,7 +137,7 @@ def _build_data(ws, rows: list[dict], template: dict):
     # Data rows
     for row_idx, record in enumerate(rows):
         excel_row = row_idx + 2
-        ws.row_dimensions[excel_row].height = 36
+        ws.row_dimensions[excel_row].height = 62
         for col_idx, col_def in enumerate(columns, 1):
             key = col_def["key"]
             value = record.get(key, "")
