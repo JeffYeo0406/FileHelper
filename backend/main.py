@@ -14,8 +14,6 @@ app = FastAPI(
     version="2.0.0"
 )
 
-app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
-
 # CORS — allow same-origin browser access
 app.add_middleware(
     CORSMiddleware,
