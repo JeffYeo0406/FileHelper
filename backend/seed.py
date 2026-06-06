@@ -1,10 +1,11 @@
 """Create database tables and a default admin account."""
-from database import init_db, SessionLocal
+from database import init_db, SessionLocal, reset_sqlite_db_file
 from models.user import User
 from routers.auth import hash_password
 
 
 def seed():
+    reset_sqlite_db_file()
     init_db()
     db = SessionLocal()
 

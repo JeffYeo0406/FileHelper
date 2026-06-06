@@ -1,12 +1,13 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from database import init_db
 from routers.templates import load_templates
 from routers import auth, templates, process, history
-from config import OUTPUT_DIR, FRONTEND_DIR
+from config import OUTPUT_DIR
 
 app = FastAPI(
     title="Simple File Helper",
@@ -40,6 +41,16 @@ async def startup():
 
     # Load all template JSON files into memory
     load_templates()
+
+
+@app.get("/app/index.html")
+def legacy_login_page():
+    return RedirectResponse(url="/", status_code=307)
+
+
+@app.get("/app/app.html")
+def legacy_app_page():
+    return RedirectResponse(url="/app.html", status_code=307)
 
 
 # Serve frontend static files

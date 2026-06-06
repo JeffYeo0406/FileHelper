@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         // Redirect if already logged in
         if (isLoggedIn()) {
-            window.location.href = '/app/app.html';
+            window.location.href = '/app.html';
             return;
         }
         loginForm.addEventListener('submit', handleLogin);
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // If we're on the main app, check auth
     if (!loginForm && window.location.pathname.includes('app.html')) {
         if (!isLoggedIn()) {
-            window.location.href = '/app/index.html';
+            window.location.href = '/';
         }
     }
 });
@@ -35,7 +35,7 @@ async function handleLogin(e) {
     try {
         const data = await apiPost('/auth/login', { username, password });
         setToken(data.access_token);
-        window.location.href = '/app/app.html';
+        window.location.href = '/app.html';
     } catch (err) {
         errorEl.textContent = err.message;
         errorEl.classList.add('visible');
@@ -46,5 +46,5 @@ async function handleLogin(e) {
 
 function logout() {
     clearToken();
-    window.location.href = '/app/index.html';
+    window.location.href = '/';
 }

@@ -5,8 +5,8 @@ This project is ready to deploy on Render as a single Python web service.
 ## What Render Uses
 
 - `render.yaml` at the repository root
-- `backend/` as the service root
-- `python seed.py && uvicorn main:app --host 0.0.0.0 --port $PORT` as the start command
+- the repository root as the service root
+- `python backend/seed.py && uvicorn main:app --app-dir backend --host 0.0.0.0 --port $PORT` as the start command
 
 ## Deployment Steps
 
@@ -40,5 +40,6 @@ Change the password immediately after the first login.
 
 - The app seeds the database at startup, so the admin account is created automatically.
 - The service currently uses SQLite, which keeps the deployment simple.
+- The database file is recreated on each startup, so data does not persist across deploys.
 - If you later want durable storage across restarts, move the app to a persistent disk or a managed database and update `DATABASE_URL` accordingly.
 - Any new template JSON files must be committed before deployment so Render serves them on startup.
